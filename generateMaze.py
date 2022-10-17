@@ -4,6 +4,11 @@ import classNode as cn
 class generateMaze:
     def __init__(self, size: tuple):
         self.size = size
+        # Mazegen only works with odd number of dimensions, so
+        if size[0] % 2 == 0:
+            size[0] += 1
+        if size[1] % 2 == 0:
+            size[1] += 1
         # Create initial maze, for now all cells have their coords set to -1, -1
         self.maze = [cn.Node((-1, -1)) for i in range(self.size[0] * self.size[1])]
         x = self.size[0]
