@@ -4,7 +4,7 @@ import classNode as cn
 class generateMaze:
     def __init__(self, size: tuple):
         self.size = size
-        # Mazegen only works with odd number of dimensions, so
+        # Mazegen only works with an odd number for its dimensions, so
         if size[0] % 2 == 0:
             size[0] += 1
         if size[1] % 2 == 0:
