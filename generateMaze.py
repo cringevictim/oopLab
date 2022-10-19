@@ -4,29 +4,26 @@ import classNode as cn
 class generateMaze:
     def __init__(self, size: tuple):
         self.size = size
-        # Mazegen only works with an odd number for its dimensions, so
+        # Mazegen only works with odd number of dimensions, so
         if size[0] % 2 == 0:
             size[0] += 1
         if size[1] % 2 == 0:
             size[1] += 1
-        # Create initial maze, for now all cells have their coords set to -1, -1
-        self.maze = [cn.Node((-1, -1)) for i in range(self.size[0] * self.size[1])]
+
         x = self.size[0]
         y = self.size[1]
 
-        # Fill the maze with proper coords (CHECK)
-        for i in range(x):
-            for j in range(y):
-                self.maze[(i * y) + j].coordinates = (i, j)
+        # Create initial maze
+        self.maze = [[cn.Node((row, col)) for col in range(y)] for row in range(x)]
 
         # Fill the edges of the maze with walls
         def __EdgeWall():
             for i in range(y):
-                self.maze[i].isWall = True
-                self.maze[((x - 1) * y) + i].isWall = True
+                self.maze[0][i].isWall = True
+                self.maze[x - 1][i].isWall = True
             for i in range(x):
-                self.maze[i * y].isWall = True
-                self.maze[i * y + (y - 1)].isWall = True
+                self.maze[i][0].isWall = True
+                self.maze[i][y - 1].isWall = True
 
         def __generate():  # Main generation algorithm
             random.seed()
@@ -43,24 +40,26 @@ class generateMaze:
                 yr = p[2]
                 xr = p[3]
 
-                if self.maze[(xr * y) + yr].isWall == True:  # If the path to the new passage is a wall, we remove the wall and the cell next to it
-                    self.maze[(p[1] * y) + p[0]].isWall = False
-                    self.maze[(xr * y) + yr].isWall = False
+                if self.maze[xr][yr].isWall == True:  # If the path to the new passage is a wall, we remove the wall
+                    # and the cell next to it
+                    self.maze[p[1]][p[0]].isWall = False
+                    self.maze[xr][yr].isWall = False
 
-                    # This block of code determines new available passages by checking each of the 4 directions for walls and adding that passage to the list of passages
-                    if xr >= 2 and self.maze[((xr - 2) * y) + yr].isWall == True:
+                    # This block of code determines new available passages by checking each of the 4 directions for
+                    # walls and adding that passage to the list of passages
+                    if xr >= 2 and self.maze[xr - 2][yr].isWall == True:
                         newPassage = [yr, xr - 1, yr, xr - 2]
                         passages.append(newPassage)
 
-                    if yr >= 2 and self.maze[(xr * y) + (yr - 2)].isWall == True:
+                    if yr >= 2 and self.maze[xr][yr - 2].isWall == True:
                         newPassage = [yr - 1, xr, yr - 2, xr]
                         passages.append(newPassage)
 
-                    if xr < x - 2 and self.maze[((xr + 2) * y) + yr].isWall == True:
+                    if xr < x - 2 and self.maze[xr + 2][yr].isWall == True:
                         newPassage = [yr, xr + 1, yr, xr + 2]
                         passages.append(newPassage)
 
-                    if yr < y - 2 and self.maze[(xr * y) + (yr + 2)].isWall == True:
+                    if yr < y - 2 and self.maze[xr][yr + 2].isWall == True:
                         newPassage = [yr + 1, xr, yr + 2, xr]
                         passages.append(newPassage)
 
