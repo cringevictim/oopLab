@@ -1,71 +1,49 @@
 import pygame
-from main import Node
-pygame.init()
+import time
 
-WIDTH, HEIGHT = 800, 600
-FPS = 60
-TILE = 32
-window = pygame.display.set_mode((WIDTH, HEIGHT))
-clock = pygame.time.Clock()
+keyList = (pygame.K_LEFT, pygame.K_RIGHT, pygame.K_UP, pygame.K_DOWN)
+
 
 class Player:
-    def __init__(self, color, px, py, direct, keyList):
+    def __init__(self, playerColor, pathColor, px, py, direct, objects, tile):
         objects.append(self)
         self.type = 'player'
+        self.oldX = tile
+        self.oldY = tile
 
-        self.color = color
-        self.rect = pygame.Rect(px, py, TILE, TILE)
+        self.playerColor = playerColor
+        self.pathColor = pathColor
+        self.rect = pygame.Rect(px, py, tile, tile)
+        self.rectOld = pygame.Rect(self.oldX, self.oldY, tile, tile)
         self.direct = direct
-        self.moveSpeed = 2
 
         self.keyLEFT = keyList[0]
         self.keyRIGHT = keyList[1]
         self.keyUP = keyList[2]
         self.keyDOWN = keyList[3]
 
+    def update(self, window, keys, width, height, tile, maze):
+        timeToSleep = 0.1
+        self.rectOld = pygame.Rect(self.oldX, self.oldY, tile, tile)
+        if maze.maze[int(self.oldX/tile)][int(self.oldY/tile)].isPartOfPath:
+            pygame.draw.rect(window, self.pathColor, self.rectOld)
+        else:
+            pygame.draw.rect(window, 'black', self.rectOld)
 
-    def update(self):
-        oldX, oldY = self.rect.topleft
-        if keys[self.keyLEFT]:
-            self.rect.x -= self.moveSpeed
-        elif keys[self.keyRIGHT]:
-            self.rect.x += self.moveSpeed
-        elif keys[self.keyUP]:
-            self.rect.y -= self.moveSpeed
-        elif keys[self.keyDOWN]:
-            self.rect.y += self.moveSpeed
-        for obj in objects:
-            if obj != self and self.rect.colliderect(obj.rect):
-                self.rect.topleft = oldX, oldY
+        if keys[self.keyLEFT] and self.rect.x > tile and not maze.maze[int(self.rect.x/tile-1)][int(self.rect.y/tile)].isWall:
+            self.rect.x -= tile
+            time.sleep(timeToSleep)
+        elif keys[self.keyRIGHT] and self.rect.x < width - tile*2 and not maze.maze[int(self.rect.x/tile+1)][int(self.rect.y/tile)].isWall:
+            self.rect.x += tile
+            time.sleep(timeToSleep)
+        elif keys[self.keyUP] and self.rect.y > tile and not maze.maze[int(self.rect.x/tile)][int(self.rect.y/tile)-1].isWall:
+            self.rect.y -= tile
+            time.sleep(timeToSleep)
+        elif keys[self.keyDOWN] and self.rect.y < height - tile*2 and not maze.maze[int(self.rect.x/tile)][int(self.rect.y/tile)+1].isWall:
+            self.rect.y += tile
+            time.sleep(timeToSleep)
 
-        if self.rect.right > WIDTH:
-            self.rect.right = WIDTH
-        if self.rect.left < 0:
-            self.rect.left = 0
-        if self.rect.bottom > HEIGHT:
-            self.rect.bottom = HEIGHT
-        if self.rect.top < 0:
-            self.rect.top = 0
+        self.oldX = self.rect.x
+        self.oldY = self.rect.y
 
-    def draw(self):
-        pygame.draw.rect(window, self.color,  self.rect)
-
-objects = []
-
-Player('blue', 10, 10, 0, (pygame.K_LEFT, pygame.K_RIGHT, pygame.K_UP, pygame.K_DOWN))
-play = True
-while play:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            play = False
-
-    keys = pygame.key.get_pressed()
-
-    for obj in objects: obj.update()
-    window.fill('black')
-    for obj in objects: obj.draw()
-
-    pygame.display.update()
-    clock.tick(FPS)
-
-pygame.quit()
+        pygame.draw.rect(window, self.playerColor, self.rect)

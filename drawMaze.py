@@ -1,15 +1,10 @@
-import classNode as cn
-from generateMaze import generateMaze
 import pygame
+from player import Player
 
-example = 0
-FPS = 60
-
-
-class Wall(pygame.sprite.Sprite):
+class Sprite(pygame.sprite.Sprite):
     """Create class of wall."""
 
-    # Initialize the data about the wall
+    # Initialize the data about the sprite
     def __init__(self, x, y, width, height, img, screen):
         super().__init__()
         self.x = x
@@ -21,37 +16,46 @@ class Wall(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.screen = screen
 
-    # Draw wall.
+    # Draw sprite.
     def draw(self):
         self.screen.blit(self.image, (self.x * self.width, self.y * self.height))
 
 
 # Method for drawing the maze.
-def draw_maze(maze):
+def draw_maze(maze, fps, width, height, tile):
     pygame.init()
     pygame.display.set_caption("Maze")
-    screen = pygame.display.set_mode((525, 525))
+    screen = pygame.display.set_mode((width, height))
     running = True
-    walls = pygame.sprite.Group()
+    sprites = pygame.sprite.Group()
     # Check each node in generated maze.
-    for node in maze.maze:
-        if node.isWall:
-            wall = Wall(node.coordinates[0], node.coordinates[1], 25, 25, "handpaintedwall2.png", screen)
-            walls.add(wall)
-            wall.draw()
+    for subList in maze.maze:
+        for node in subList:
+            if node.isWall:
+                wall = Sprite(node.coordinates[0], node.coordinates[1], tile, tile, "wall.png", screen)
+                sprites.add(wall)
+                wall.draw()
+            else:
+                if node.isPartOfPath:
+                    path = Sprite(node.coordinates[0], node.coordinates[1], tile, tile, "path.png", screen)
+                    sprites.add(path)
+                    path.draw()
+
     clock = pygame.time.Clock()
+
+    # Moved from player.py
+    objects = []
+    plr = Player('yellow', 'green', tile, tile, 0, objects, tile)
+
     # Main loop.
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+
+        # Moved from player.py
+        keys = pygame.key.get_pressed()
+        plr.update(screen, keys, width, height, tile, maze)
+
         pygame.display.update()
-        clock.tick(FPS)
-
-
-# Run the program.
-if __name__ == '__main__':
-    maze = generateMaze((21, 21))
-
-    instance = cn.Node((1, 1))
-    draw_maze(maze)
+        clock.tick(fps)
