@@ -2,7 +2,7 @@ import drawMaze
 from generateMaze import generateMaze
 from pathFinder import *
 
-SIZE_X = 67# Only odd numbers # Not bigger than
+SIZE_X = 67  # Only odd numbers # Not bigger than
 SIZE_Y = 41
 
 # DO NOT EDIT
@@ -12,11 +12,12 @@ WIDTH = SIZE_X*TILE
 HEIGHT = SIZE_Y*TILE
 
 if __name__ == '__main__':
-    maze = generateMaze((SIZE_X, SIZE_Y))  # Odd numbers only
+    maze = generateMaze((SIZE_X, SIZE_Y))
 
-    path = pathFinder(maze, (1,1), (SIZE_X-2,SIZE_Y-2))
+    pathF = pathFinder(maze, (1,1), (SIZE_X-2,SIZE_Y-2))
+    path = pathF.pathFinder()
     for obj in path:
        maze.maze[obj[0]][obj[1]].isPartOfPath = True
-    print(path)
+    # print(path)
 
     drawMaze.draw_maze(maze, FPS, WIDTH, HEIGHT, TILE)
