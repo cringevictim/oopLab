@@ -35,11 +35,9 @@ def draw_maze(maze, fps, width, height, tile):
                 wall = Sprite(node.coordinates[0], node.coordinates[1], tile, tile, "wall.png", screen)
                 sprites.add(wall)
                 wall.draw()
-            else:
-                if node.isPartOfPath:
-                    path = Sprite(node.coordinates[0], node.coordinates[1], tile, tile, "path.png", screen)
-                    sprites.add(path)
-                    path.draw()
+            # else:
+            #     if node.isPartOfPath:
+            #         pygame.draw.rect(screen, 'green', pygame.Rect(node.coordinates[0], node.coordinates[1], tile, tile))
 
     clock = pygame.time.Clock()
 
