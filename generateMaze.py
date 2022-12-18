@@ -1,6 +1,7 @@
 import random
 import classNode as cn
 
+
 class generateMaze:
     def __init__(self, size: tuple):
         self.size = size
@@ -12,6 +13,8 @@ class generateMaze:
 
         x = self.size[0]
         y = self.size[1]
+        t = True
+        f = False
 
         # Create initial maze
         self.maze = [[cn.Node((row, col)) for col in range(y)] for row in range(x)]
@@ -24,6 +27,63 @@ class generateMaze:
             for i in range(x):
                 self.maze[i][0].isWall = True
                 self.maze[i][y - 1].isWall = True
+
+        # Simple function to check the 3x3 box around the selected cell
+        def __pattern_check(b00, b10, b20, b01, b11, b21, b02, b12, b22, x, y):
+            if self.maze[x - 1][y - 1].isWall == b00 and self.maze[x][y-1].isWall == b10 and self.maze[x+1][y-1].isWall == b20 \
+                    and self.maze[x-1][y].isWall == b01 and self.maze[x][y].isWall == b11 and self.maze[x+1][y].isWall == b21 \
+                    and self.maze[x-1][y+1].isWall == b02 and self.maze[x][y+1].isWall == b12 and self.maze[x+1][y+1].isWall == b22:
+                return True
+            else:
+                return False
+
+        # Checks if a selected cell is one of the allowed wall configurations, if so, it's slated for removal
+        def __check_complex_compliance(x, y):
+            if __pattern_check(t,t,t,
+                               f,t,f,
+                               t,t,t, x, y):
+                return True
+            if __pattern_check(t,f,t,
+                               t,t,t,
+                               t,f,t, x, y):
+                return True
+            if __pattern_check(t,t,f,
+                               f,t,f,
+                               t,t,t, x, y):
+                return True
+            if __pattern_check(f,t,t,
+                               f,t,f,
+                               t,t,t, x, y):
+                return True
+            if __pattern_check(t,f,f,
+                               t,t,t,
+                               t,f,t, x, y):
+                return True
+            if __pattern_check(t,f,t,
+                               t,t,t,
+                               t,f,f, x, y):
+                return True
+
+            return False
+
+        # Function tries to add N new passages into maze
+        def __complexify():
+            random.seed()
+            for i in range(x):
+                xr = random.randrange(1, x - 1, 1)
+                yr = random.randrange(1, y - 1, 1)
+                if __check_complex_compliance(xr, yr):
+                    self.maze[xr][yr].isWall = False
+                else:
+                    cycles = 0
+                    while not __check_complex_compliance(xr, yr):
+                        cycles += 1
+                        # If the maze runs out of new passages, it will attempt to generate it 400 times before failing
+                        if cycles > 400:
+                            return
+                        xr = random.randrange(1, x - 1, 1)
+                        yr = random.randrange(1, y - 1, 1)
+                    self.maze[xr][yr].isWall = False
 
         def __generate():  # Main generation algorithm
             random.seed()
@@ -63,7 +123,8 @@ class generateMaze:
                         newPassage = [yr + 1, xr, yr + 2, xr]
                         passages.append(newPassage)
 
-            __EdgeWall()  # Wall off the outside of the maze
+            __EdgeWall()      # Wall off the outside of the maze
+            __complexify()    # Add complexity via adding new passages
             passages.clear()  # Clear the created list
 
         __generate()
