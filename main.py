@@ -15,7 +15,7 @@ if __name__ == '__main__':
     maze = generateMaze((SIZE_X, SIZE_Y))
 
     pathF = pathFinder(maze, (1,1), (SIZE_X-2,SIZE_Y-2))
-    path = pathF.pathFinder()
+    path = pathF.botPathFinder()
     for obj in path:
        maze.maze[obj[0]][obj[1]].isPartOfPath = True
     # print(path)
