@@ -1,11 +1,8 @@
 import pygame
 import time
 
-keyList = (pygame.K_LEFT, pygame.K_RIGHT, pygame.K_UP, pygame.K_DOWN)
-
-
 class Player:
-    def __init__(self, playerColor, pathColor, px, py, direct, objects, tile):
+    def __init__(self, playerColor, pathColor, px, py, direct, objects, tile, keyList):
         objects.append(self)
         self.type = 'player'
         self.oldX = tile

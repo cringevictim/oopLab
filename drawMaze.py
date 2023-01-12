@@ -24,7 +24,7 @@ class Sprite(pygame.sprite.Sprite):
 
 
 class MazeGame:
-    def __init__(self, width, height, fps, tile, maze):
+    def __init__(self, width, height, fps, tile, maze, KL1, KL2):
         pygame.init()
         pygame.display.set_caption("Maze")
         self.screen = pygame.display.set_mode((width, height))
@@ -38,8 +38,8 @@ class MazeGame:
         self.maze = maze
 
         objects = []
-        self.player = Player('yellow', 'green', self.tile, self.tile, 0, objects, self.tile)
-
+        self.player = Player('yellow', 'green', self.tile, self.tile+608, 0, objects, self.tile, KL1)
+        self.player1 = Player('blue', 'red', self.tile, self.tile, 0, objects, self.tile, KL2)
         self.play_button = Button(self, "Play")
         self.restart_button = Button(self, "Restart game")
 
@@ -60,7 +60,7 @@ class MazeGame:
     def draw_player(self):
         keys = pygame.key.get_pressed()
         self.player.update(self.screen, keys, self.width, self.height, self.tile, self.maze)
-
+        self.player1.update(self.screen, keys, self.width, self.height, self.tile, self.maze)
     def add_path(self, path):
         self.path = path
 

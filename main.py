@@ -1,6 +1,10 @@
 import drawMaze
 from generateMaze import generateMaze
 from pathFinder import *
+import pygame
+
+KEY_LIST_PLR = (pygame.K_LEFT, pygame.K_RIGHT, pygame.K_UP, pygame.K_DOWN)
+KEY_LIST_PLR1 = (pygame.K_a, pygame.K_d, pygame.K_w, pygame.K_s)
 
 SIZE_X = 67  # Only odd numbers # Not bigger than
 SIZE_Y = 41
@@ -20,7 +24,7 @@ if __name__ == '__main__':
         for obj in path:
            maze.maze[obj[0]][obj[1]].isPartOfPath = True
         # print(path)
-        maze_game = drawMaze.MazeGame(WIDTH, HEIGHT, FPS, TILE, maze)
+        maze_game = drawMaze.MazeGame(WIDTH, HEIGHT, FPS, TILE, maze, KEY_LIST_PLR, KEY_LIST_PLR1)
         maze_game.add_path(path)
         try:
             maze_game.run_maze()
