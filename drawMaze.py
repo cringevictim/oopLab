@@ -1,5 +1,7 @@
 import pygame
 from player import Player
+from button import Button
+
 
 class Sprite(pygame.sprite.Sprite):
     """Create class of wall."""
@@ -21,36 +23,78 @@ class Sprite(pygame.sprite.Sprite):
         self.screen.blit(self.image, (self.x * self.width, self.y * self.height))
 
 
-# Method for drawing the maze.
-def draw_maze(maze, fps, width, height, tile):
-    pygame.init()
-    pygame.display.set_caption("Maze")
-    screen = pygame.display.set_mode((width, height))
-    running = True
-    sprites = pygame.sprite.Group()
-    # Check each node in generated maze.
-    for subList in maze.maze:
-        for node in subList:
-            if node.isWall:
-                wall = Sprite(node.coordinates[0], node.coordinates[1], tile, tile, "wall.png", screen)
-                sprites.add(wall)
-                wall.draw()
+class MazeGame:
+    def __init__(self, width, height, fps, tile, maze):
+        pygame.init()
+        pygame.display.set_caption("Maze")
+        self.screen = pygame.display.set_mode((width, height))
+        self.sprites = pygame.sprite.Group()
 
-    clock = pygame.time.Clock()
+        self.width = width
+        self.height = height
 
-    # Moved from player.py
-    objects = []
-    plr = Player('yellow', 'green', tile, tile, 0, objects, tile)
+        self.fps = fps
+        self.tile = tile
+        self.maze = maze
 
-    # Main loop.
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
+        objects = []
+        self.player = Player('yellow', 'green', self.tile, self.tile, 0, objects, self.tile)
 
-        # Moved from player.py
+        self.play_button = Button(self, "Play")
+        self.restart_button = Button(self, "Restart game")
+
+        self.game_active = False
+
+        self.path = None
+
+    def draw_maze(self):
+        # Check each node in generated maze.
+        for subList in self.maze.maze:
+            for node in subList:
+                if node.isWall:
+                    wall = Sprite(node.coordinates[0], node.coordinates[1], self.tile, self.tile, "wall.png",
+                                  self.screen)
+                    self.sprites.add(wall)
+                    wall.draw()
+
+    def draw_player(self):
         keys = pygame.key.get_pressed()
-        plr.update(screen, keys, width, height, tile, maze)
+        self.player.update(self.screen, keys, self.width, self.height, self.tile, self.maze)
 
-        pygame.display.update()
-        clock.tick(fps)
+    def add_path(self, path):
+        self.path = path
+
+    def run_maze(self):
+        clock = pygame.time.Clock()
+        running = True
+        show_button = True
+        button_clicked = False
+        restart_button_clicked = False
+        restart = False
+        while running:
+            self.draw_maze()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    raise Exception
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    mouse_pos = pygame.mouse.get_pos()
+                    button_clicked = self.play_button.rect.collidepoint(mouse_pos)
+                    restart_button_clicked = self.restart_button.rect.collidepoint(mouse_pos)
+            if not button_clicked and show_button:
+                self.play_button.draw_button()
+            elif show_button:
+                self.screen.fill((0, 0, 0))
+                show_button = False
+                self.play_button.kill()
+            if button_clicked and not restart:
+                restart_button_clicked = None
+            if self.path and self.player.rect.x == 65*self.tile and self.player.rect.y == 39*self.tile:
+                self.restart_button.draw_button()
+                restart = True
+            if restart_button_clicked and restart:
+                break
+
+            self.draw_player()
+            pygame.display.update()
+            clock.tick(self.fps)
+
