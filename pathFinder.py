@@ -1,3 +1,4 @@
+import random
 
 class pathFinder:
     def __init__(self, maze, start, end):
@@ -68,4 +69,22 @@ class pathFinder:
 
         return self.path
 
+    def botPathFinder(self):
+        start_tmp = self.start
+        end_tmp = self.end
 
+        non_wall_indexes = [(i,j) for i, row in enumerate(self.maze.maze) for j, val in enumerate(row) if  val.isWall == False]
+        self.end =  random.choice(non_wall_indexes)
+
+        print(self.end)
+
+        path = self.pathFinder()
+        path.pop()
+
+        self.start = self.end
+        self.end = end_tmp
+
+        path = path + self.pathFinder()
+        self.start = start_tmp
+
+        return path
