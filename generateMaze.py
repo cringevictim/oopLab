@@ -62,6 +62,22 @@ class generateMaze:
             if __pattern_check(t,f,t,
                                t,t,t,
                                t,f,f, x, y):
+                return True #
+            if __pattern_check(t,t,t,
+                               f,t,f,
+                               t,t,f, x, y):
+                return True
+            if __pattern_check(t,t,t,
+                               f,t,f,
+                               f,t,t, x, y):
+                return True
+            if __pattern_check(t,f,t,
+                               t,t,t,
+                               f,f,t, x, y):
+                return True
+            if __pattern_check(f,f,t,
+                               t,t,t,
+                               t,f,t, x, y):
                 return True
 
             return False
@@ -124,7 +140,7 @@ class generateMaze:
                         passages.append(newPassage)
 
             __EdgeWall()      # Wall off the outside of the maze
-            __complexify()    # Add complexity via adding new passages
+            #__complexify()    # Add complexity via adding new passages
             passages.clear()  # Clear the created list
 
         __generate()
