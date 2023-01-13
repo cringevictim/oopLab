@@ -140,7 +140,7 @@ class generateMaze:
                         passages.append(newPassage)
 
             __EdgeWall()      # Wall off the outside of the maze
-            #__complexify()    # Add complexity via adding new passages
+            __complexify()    # Add complexity via adding new passages
             passages.clear()  # Clear the created list
 
         __generate()
