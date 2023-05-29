@@ -1,6 +1,7 @@
 import random
 from genMazeFactory import genMazeFactory as maze
 
+# Generates a maze using the naive Primm algorithm
 
 class genMazePrimm(maze):
     def generate(self):  # Main generation algorithm

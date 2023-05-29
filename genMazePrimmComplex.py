@@ -1,6 +1,7 @@
 import random
 from genMazeFactory import genMazeFactory as maze
 
+# Same as Primm, but added complex passages, so that there is more than one solution to the maze
 
 class genMazePrimmComplex(maze):
     def generate(self):  # Main generation algorithm

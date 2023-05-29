@@ -1,6 +1,7 @@
 import classNode as cn
 from abc import ABC, abstractmethod
 
+# Generic factory method, implements everything needed to generate a blank maze, edgeWall remains as it's used everywhere
 
 class genMazeFactory(ABC):
     def __init__(self, size: tuple):
