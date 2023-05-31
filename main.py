@@ -1,5 +1,5 @@
 import drawMaze
-from genMazePrimmComplex import genMazePrimmComplex as mazePrimmComp
+from generateMaze import genMazePrimm as mazePrimm
 from pathFinder import *
 import pygame
 
@@ -17,7 +17,7 @@ HEIGHT = SIZE_Y*TILE
 
 if __name__ == '__main__':
     while True:
-        maze = mazePrimmComp((SIZE_X, SIZE_Y))
+        maze = mazePrimm((SIZE_X, SIZE_Y))
 
         pathF = pathFinder(maze, (1,1), (SIZE_X-2,SIZE_Y-2))
         path = pathF.pathFinder()
