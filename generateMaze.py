@@ -285,11 +285,3 @@ class genMazeBinaryTreeComplex(genMazeFactory):
             return row, col
         else:
             return random.choice(neighbors)
-
-# Space-filling snake, non-maze
-class genMazeSnake(genMazeFactory):
-    pass
-
-# Hilbert space-filling curve, non-maze
-class genMazeHilbert(genMazeFactory):
-    pass
