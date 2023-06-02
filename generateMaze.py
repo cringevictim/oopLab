@@ -20,16 +20,16 @@ class genMazeFactory(ABC):
         self.maze = [[cn.Node((row, col)) for col in range(self.y)] for row in range(self.x)]
         self.generate()
 
-        # Fill the edges of the maze with walls
-    def edgeWall(self):
-        y = self.y
-        x = self.x
-        for i in range(y):
-            self.maze[0][i].isWall = True
-            self.maze[x - 1][i].isWall = True
-        for i in range(x):
-            self.maze[i][0].isWall = True
-            self.maze[i][y - 1].isWall = True
+    # Fill the edges of the maze with walls OBSOLETE
+    #def edgeWall(self):
+    #    y = self.y
+    #    x = self.x
+    #    for i in range(y):
+    #        self.maze[0][i].isWall = True
+    #        self.maze[x - 1][i].isWall = True
+    #    for i in range(x):
+    #        self.maze[i][0].isWall = True
+    #        self.maze[i][y - 1].isWall = True
 
     # Simple function to check the 3x3 box around the selected cell
     def patternCheck(self, b00, b10, b20, b01, b11, b21, b02, b12, b22, x, y):
@@ -165,7 +165,6 @@ class genMazePrimm(genMazeFactory):
                     newPassage = [yr + 1, xr, yr + 2, xr]
                     passages.append(newPassage)
 
-        self.edgeWall()      # Wall off the outside of the maze
         passages.clear()  # Clear the created list
 
 
@@ -211,7 +210,7 @@ class genMazePrimmComplex(genMazeFactory):
                     newPassage = [yr + 1, xr, yr + 2, xr]
                     passages.append(newPassage)
 
-        self.edgeWall()   # Wall off the outside of the maze
+        #self.edgeWall()   # Wall off the outside of the maze
         self.complexify(400) # Add non-trivial passages
         passages.clear()  # Clear the created list
 
@@ -223,10 +222,11 @@ class genMazeBinaryTree(genMazeFactory):
         y = self.y
 
         biases = {
-            "NW": [(1, 0), (0, -1)],
-            "NE": [(1, 0), (0, 1)],
+            # "NW": [(1, 0), (0, -1)],
+            # "NE": [(1, 0), (0, 1)],
             "SW": [(-1, 0), (0, -1)],
-            "SE": [(-1, 0), (0, 1)]}
+            # "SE": [(-1, 0), (0, 1)]
+        }
         key = random.choice(list(biases.keys()))
         bias = biases[key]
 
@@ -235,7 +235,7 @@ class genMazeBinaryTree(genMazeFactory):
                 self.maze[i][j].isWall = False
                 neighbor_i, neighbor_j = self.find_neighbor(i,j, bias)
                 self.maze[neighbor_i][neighbor_j].isWall = False
-        self.edgeWall()
+
     def find_neighbor(self, row, col, bias):
         x = self.x
         y = self.y
@@ -257,10 +257,11 @@ class genMazeBinaryTreeComplex(genMazeFactory):
         y = self.y
 
         biases = {
-            "NW": [(1, 0), (0, -1)],
-            "NE": [(1, 0), (0, 1)],
+            #"NW": [(1, 0), (0, -1)],
+            #"NE": [(1, 0), (0, 1)],
             "SW": [(-1, 0), (0, -1)],
-            "SE": [(-1, 0), (0, 1)]}
+            #"SE": [(-1, 0), (0, 1)]
+            }
         key = random.choice(list(biases.keys()))
         bias = biases[key]
 
@@ -271,7 +272,6 @@ class genMazeBinaryTreeComplex(genMazeFactory):
                 self.maze[neighbor_i][neighbor_j].isWall = False
 
         self.complexify(10000)
-        self.edgeWall()
     def find_neighbor(self, row, col, bias):
         x = self.x
         y = self.y
