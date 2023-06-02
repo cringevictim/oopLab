@@ -120,7 +120,7 @@ class genMazeFactory(ABC):
 
     @abstractmethod
     def generate(self):  # Main generation algorithm
-        self.edgeWall()
+        pass
 
 
 # Generates a maze using the naive Primm algorithm
