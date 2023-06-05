@@ -1,10 +1,28 @@
-import classNode as cn
-from generateMaze import generateMaze
+import drawMaze
+from generateMaze import genMazePrimm, genMazePrimmComplex, genMazeBinaryTree, genMazeBinaryTreeComplex
+from pathFinder import *
+import pygame
+from exceptions import EndGameException
 
-example = 0
+SIZE_X = 67  # Only odd numbers # Not bigger than
+SIZE_Y = 41
 
-if __name__ == 'main':
-    maze = generateMaze((21, 21)) #Odd numbers only
-    
-    instance = cn.Node((1,1))
-    print(instance.coordinates)
+# DO NOT EDIT
+FPS = 60
+TILE = 16  # Square side in pixels
+WIDTH = SIZE_X*TILE
+HEIGHT = SIZE_Y*TILE
+
+if __name__ == '__main__':
+
+    while True:
+        maze_game = drawMaze.MazeGame(
+            WIDTH, HEIGHT, FPS, TILE)
+        maze_game.choose_maze()
+        try:
+            maze_game.run_maze()
+        except EndGameException:
+            break
+        except Exception as ex:
+            print(f"The game exited unexpectedly: {ex}")
+            break
