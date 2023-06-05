@@ -6,12 +6,13 @@ from exceptions import EndGameException
 
 SIZE_X = 67  # Only odd numbers # Not bigger than
 SIZE_Y = 41
-
 # DO NOT EDIT
 FPS = 60
 TILE = 16  # Square side in pixels
 WIDTH = SIZE_X*TILE
 HEIGHT = SIZE_Y*TILE
+
+
 
 if __name__ == '__main__':
 
